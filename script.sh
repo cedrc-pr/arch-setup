@@ -196,6 +196,18 @@ if ask "add ports alias?"; then
   aliases="${aliases}alias ports='sudo ss -tupln'\n"
 fi
 
+if ask "add keyboard shortcut super + t to switch between dark and light theme (change gnome theme)"; then
+  conf_path="$HOME/.theme-switcher.sh"
+  cp contents/shortcuts/.theme-switcher.sh "$conf_path"
+  chmod +x "$conf_path"
+  schema="org.gnome.settings-daemon.plugins.media-keys"
+  path_key="/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/ghostty/"
+  gsettings set "$schema" custom-keybindings "['$path_key']"
+  gsettings set "$schema.custom-keybinding:$path_key" name 'theme switcher'
+  gsettings set "$schema.custom-keybinding:$path_key" command "$conf_path"
+  gsettings set "$schema.custom-keybinding:$path_key" binding '<Super>t'
+fi
+
 echo "starship: install and use it"
 if ask "use starship?"; then
   yay -S --needed --noconfirm starship
