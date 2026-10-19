@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 if [ "$(gsettings get org.gnome.desktop.interface color-scheme)" = "'prefer-dark'" ]; then
   gsettings set org.gnome.desktop.interface color-scheme 'prefer-light'
 else

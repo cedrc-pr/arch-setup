@@ -197,8 +197,9 @@ if ask "add ports alias?"; then
 fi
 
 if ask "add keyboard shortcut super + t to switch between dark and light theme (change gnome theme)"; then
-  conf_path="$HOME/.theme-switcher.sh"
-  cp contents/shortcuts/.theme-switcher.sh "$conf_path"
+  conf_path="$HOME/scripts/theme-switcher.sh"
+  mkdir -p "$HOME/scripts/"
+  cp contents/scripts/theme-switcher.sh "$conf_path"
   chmod +x "$conf_path"
   schema="org.gnome.settings-daemon.plugins.media-keys"
   path_key="/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/ghostty/"
@@ -206,6 +207,20 @@ if ask "add keyboard shortcut super + t to switch between dark and light theme (
   gsettings set "$schema.custom-keybinding:$path_key" name 'theme switcher'
   gsettings set "$schema.custom-keybinding:$path_key" command "$conf_path"
   gsettings set "$schema.custom-keybinding:$path_key" binding '<Super>t'
+fi
+
+if ask "add a break reminder?"; then
+  yay -S --needed --noconfirm libnotify
+  conf_path="$HOME/scripts/break-reminder.sh"
+  service_path="$HOME/.config/systemd/user/break-reminder.service"
+  mkdir -p "$HOME/scripts/"
+  mkdir -p "$HOME/.config/systemd/user/"
+  cp contents/scripts/break-reminder.sh "$conf_path"
+  chmod +x "$conf_path"
+  cp contents/systemd/break-reminder.service "$service_path"
+  sed -i "s|PATH_TO_REPLACE|$conf_path|g" $service_path
+  systemctl --user daemon-reload
+  systemctl --user enable --now break-reminder.service
 fi
 
 echo "starship: install and use it"

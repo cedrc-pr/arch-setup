@@ -1,0 +1,9 @@
+[Unit]
+Description="break reminder"
+
+[Service]
+ExecStart=PATH_TO_REPLACE
+Restart=on-failure
+
+[Install]
+WantedBy=default.target
